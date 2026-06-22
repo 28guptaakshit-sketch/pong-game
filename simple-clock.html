@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Digital Clock</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #1a1a1a;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            background: #333;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: #4fc3f7;
+            margin-bottom: 30px;
+        }
+
+        .clock {
+            font-size: 60px;
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timezone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            max-width: 800px;
+        }
+
+        .timezone-box {
+            background: #444;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #4fc3f7;
+        }
+
+        .timezone-name {
+            color: #4fc3f7;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .timezone-time {
+            color: #ffd700;
+            font-size: 30px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⏰ World Clock</h1>
+        
+        <div class="clock" id="localClock">00:00:00</div>
+        
+        <div class="timezone-grid" id="timezones"></div>
+    </div>
+
+    <script>
+        const timezones = [
+            { name: 'New York', tz: 'America/New_York' },
+            { name: 'London', tz: 'Europe/London' },
+            { name: 'Tokyo', tz: 'Asia/Tokyo' },
+            { name: 'Sydney', tz: 'Australia/Sydney' },
+            { name: 'Dubai', tz: 'Asia/Dubai' },
+            { name: 'Singapore', tz: 'Asia/Singapore' }
+        ];
+
+        function formatTime(date) {
+            return date.toLocaleTimeString('en-US', { hour12: false });
+        }
+
+        function getTimeInTz(timezone) {
+            return new Date().toLocaleString('en-US', { timeZone: timezone, hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+
+        function updateClock() {
+            // Update local time
+            document.getElementById('localClock').textContent = formatTime(new Date());
+
+            // Update timezone clocks
+            timezones.forEach(item => {
+                let element = document.getElementById(item.tz);
+                if (element) {
+                    element.textContent = getTimeInTz(item.tz);
+                }
+            });
+        }
+
+        function initClocks() {
+            const container = document.getElementById('timezones');
+            timezones.forEach(item => {
+                const box = document.createElement('div');
+                box.className = 'timezone-box';
+                box.innerHTML = `
+                    <div class="timezone-name">${item.name}</div>
+                    <div class="timezone-time" id="${item.tz}">00:00:00</div>
+                `;
+                container.appendChild(box);
+            });
+            updateClock();
+        }
+
+        initClocks();
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
